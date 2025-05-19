@@ -1,7 +1,6 @@
 import cfg from '../diplomat.config.mjs';
 import {readString8} from './diplomat-runtime.mjs'
-
-let wasm;
+import * as wbg from '../wbg/lib_ffi.js'
 
 const imports = {
 env: {
@@ -23,26 +22,11 @@ env: {
     diplomat_throw_error_js(ptr, len) {
         throw new Error(readString8(wasm, ptr, len));
     }
-}
+},
+wbg: wbg.__wbg_get_imports().wbg
 }
 
-if (globalThis.process?.getBuiltinModule) {
-    // Node (>=22)
-    const fs = globalThis.process.getBuiltinModule('fs');
-    const wasmFile = new Uint8Array(fs.readFileSync(cfg['wasm_path']));
-    const loadedWasm = await WebAssembly.instantiate(wasmFile, imports);
-    wasm = loadedWasm.instance.exports;
-} else if (globalThis.process) {
-    // Node (<22)
-    const fs = await import('fs');
-    const wasmFile = new Uint8Array(fs.readFileSync(cfg['wasm_path']));
-    const loadedWasm = await WebAssembly.instantiate(wasmFile, imports);
-    wasm = loadedWasm.instance.exports;
-} else {
-    // Browser
-    const loadedWasm = await WebAssembly.instantiateStreaming(fetch(cfg['wasm_path']), imports);
-    wasm = loadedWasm.instance.exports;
-}
+let wasm = await wbg.default(imports)
 
 wasm.diplomat_init();
 if (cfg['init'] !== undefined) {
