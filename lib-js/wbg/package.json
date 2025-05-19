@@ -1,0 +1,15 @@
+{
+  "name": "lib_ffi",
+  "type": "module",
+  "version": "0.1.0",
+  "files": [
+    "lib_ffi_bg.wasm",
+    "lib_ffi.js",
+    "lib_ffi.d.ts"
+  ],
+  "main": "lib_ffi.js",
+  "types": "lib_ffi.d.ts",
+  "sideEffects": [
+    "./snippets/*"
+  ]
+}
