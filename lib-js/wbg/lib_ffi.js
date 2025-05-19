@@ -1,3 +1,4 @@
+import * as __wbg_star0 from 'env';
 
 let wasm;
 
@@ -115,7 +116,7 @@ async function __wbg_load(module, imports) {
     }
 }
 
-export function __wbg_get_imports() {
+function __wbg_get_imports() {
     const imports = {};
     imports.wbg = {};
     imports.wbg.__wbg_prompt_a66299c9ed6ab2c3 = function(arg0, arg1, arg2) {
@@ -135,6 +136,7 @@ export function __wbg_get_imports() {
         table.set(offset + 3, false);
         ;
     };
+    imports['env'] = __wbg_star0;
 
     return imports;
 }
@@ -154,7 +156,7 @@ function __wbg_finalize_init(instance, module) {
     return wasm;
 }
 
-function initSync(imports, module) {
+function initSync(module) {
     if (wasm !== undefined) return wasm;
 
 
@@ -166,6 +168,7 @@ function initSync(imports, module) {
         }
     }
 
+    const imports = __wbg_get_imports();
 
     __wbg_init_memory(imports);
 
@@ -178,7 +181,7 @@ function initSync(imports, module) {
     return __wbg_finalize_init(instance, module);
 }
 
-async function __wbg_init(imports, module_or_path) {
+async function __wbg_init(module_or_path) {
     if (wasm !== undefined) return wasm;
 
 
@@ -193,6 +196,7 @@ async function __wbg_init(imports, module_or_path) {
     if (typeof module_or_path === 'undefined') {
         module_or_path = new URL('lib_ffi_bg.wasm', import.meta.url);
     }
+    const imports = __wbg_get_imports();
 
     if (typeof module_or_path === 'string' || (typeof Request === 'function' && module_or_path instanceof Request) || (typeof URL === 'function' && module_or_path instanceof URL)) {
         module_or_path = fetch(module_or_path);
